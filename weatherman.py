@@ -83,29 +83,49 @@ if (option == '1'):
     # print(f"Lowest: {min_temp[0]['Min TemperatureC']}C on {min_temp[0]['Month']} {min_temp[0]['Date']}")
     # print(f"Humidity: {max_Humidity[0]['Max Humidity']}% on {max_Humidity[0]['Month']} {max_Humidity[0]['Date']}")
     print('\n--------------------------------------------\n')
-    ''' 
+    
 if (option == '2'):
     print("\n You have selected option 2.\n")
-   
+    year = int(input('Enter Year : '))
+    year = int(year)
     month = int(input('Enter Month : '))
     month = int(month)
-    mask = dataFrm['Month'] == month
+    maskForMonth = dataFrm['Month'] == month
+    maskForYear = dataFrm['Year'] == year
+    include = dataFrm[maskForMonth & maskForYear]
+    exclude = dataFrm[~maskForMonth & ~maskForYear]
     
-    for year in range(2004,2016):
-        mask = dataFrm['Year'] == year
-        include = dataFrm[mask]
-        exclude = dataFrm[~mask]
-        max_temp.clear()
-        min_Humidity.clear()
-        max_Humidity.clear()
-        max_temp.append(include[include['Max TemperatureC'] == include['Max TemperatureC'].max()])
-       # min_Humidity.append(include[include[' Min Humidity'] == include[' Min Humidity'].min()])
-        #max_Humidity.append(include[include['Max Humidity'] == include['Max Humidity'].max()])
-        print('Maximum Temp:',max_temp[0])
-        #print('Minimum Humidity:',min_Humidity[0])
-        #print('Max Humidity:',max_Humidity[0]) 
-        # time.sleep(5)
-            
+    print("Highest Average:", (include["Max TemperatureC"].mean()))
+    print("Lowest Average:", (include["Min TemperatureC"].mean()))
+    print("Average Mean Humidity:", (include[" Mean Humidity"].mean()))
+
+    
+    '''
+    max_temp.clear()
+    min_Humidity.clear()
+    max_Humidity.clear()
+    
+    max_temp.append(include[include['Max TemperatureC'] == include['Max TemperatureC'].max()])
+    
+    # print(type(max_temp))
+    # print(max_temp)
+    
+    # min_Humidity.append(include[include[' Min Humidity'] == include[' Min Humidity'].min()])
+    # max_Humidity.append(include[include['Max Humidity'] == include['Max Humidity'].max()])
+    print('Maximum Temp:', max_temp[0])
+    # print('Minimum Humidity:',min_Humidity[0])
+    # print('Max Humidity:',max_Humidity[0]) 
+    # time.sleep(5)
+    
+    # print("Highest Average: 39C")
+    # print("Lowest Average: 18C ")
+    # print("Average Mean Humidity: 71%")
+    
+    
+    '''
+    
+        
+'''            
 if (option == '3'):
     # import time
     print("\n You have selected option 3.\n")
