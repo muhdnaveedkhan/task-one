@@ -3,106 +3,183 @@ import glob
 import pandas as pd
 import datetime as dt
 
+
+'''
+# Converting Text files data into CSV file.
 os.chdir("/home/naveedkhan/task1_env/weatherfiles/")
 extension = 'txt'
 all_filenames = [i for i in glob.glob('*.{}'.format(extension))]
 #combine all files in the list
-combined_csv = pd.concat( [pd.read_csv(f) for f in all_filenames ])
-
+combined_csv = pd.concat([pd.read_csv(f) for f in all_filenames ])
 #export to csv
 combined_csv.to_csv( "combined_csv.csv", index = False, encoding='utf-8-sig')
-
-import pandas as pd
-
-class weather:
+'''
     
-    def main(self):
-        # Retrieving data from CSV file
-        file = r"/home/naveedkhan/task1_env/weatherfiles/combined_csv.csv"
-        dataFrm = (pd.read_csv(file))
-        '''
-        dataFrm.sort_values(by = ['PKT'], inplace=True, ascending=False)
-        x = dataFrm.groupby(['PKT'])
-        dataFrm.head(10)
+file = r"/home/naveedkhan/task1_env/weatherfiles/combined_csv.csv"
+dataFrm = (pd.read_csv(file)) 
+dataFrm.sort_values(by=['PKT'], inplace = True, ascending = False)
+x= dataFrm.groupby(['PKT'])
+dataFrm.head(10)
+
+dataFrm['Year'] = pd.DatetimeIndex(dataFrm['PKT']).year
+dataFrm['Month'] = pd.DatetimeIndex(dataFrm['PKT']).month
+dataFrm['Date'] = pd.DatetimeIndex(dataFrm['PKT']).day
+dataFrm = dataFrm[['PKT','Max TemperatureC', 'Min TemperatureC', 'Max Humidity',
+                   ' Mean Humidity', ' Min Humidity','Year','Month','Date']]
+min_temp = []
+max_temp = []
+min_Humidity = []
+max_Humidity = []
+
+min_temp.clear()
+max_temp.clear()
+min_Humidity.clear()
+max_Humidity.clear()
+
+print ("Please Enter Report Number:" \
+              "\n 1: For Min/Max Temperature & Humidity " \
+              "\n 2: For Average highest Temperature, Average Lowest Temperature, Average Mean Humidity " \
+              "\n 3: For the Highest and lowest Temperature on Each Day ")
+option = input("Enter Your Choice : ")
+
+if (option == '1'):
+    print("\n You have selected option 1.\n")
+    min_temp.clear()
+    max_temp.clear()
+    min_Humidity.clear()
+    max_Humidity.clear()
+    year = int(input('Enter Year : '))
+    year = int(year)
+    mask = dataFrm['Year'] == year
+    include = dataFrm[mask]
+    exclude = dataFrm[~mask]
+    min_temp.append(include[include['Min TemperatureC'] == include['Min TemperatureC'].min()])
+    max_temp.append(include[include['Max TemperatureC'] == include['Max TemperatureC'].max()])
+    min_Humidity.append(include[include[' Min Humidity'] == include[' Min Humidity'].min()])
+    max_Humidity.append(include[include['Max Humidity'] == include['Max Humidity'].max()])
+    
+    min_t = min(min_temp)
+    max_t = max(max_temp)
+    min_hum = min(min_Humidity)
+    max_hum = max(max_Humidity)
+    
+    max_t1 = max_t['Max TemperatureC'].drop_duplicates()
+    max_month = max_temp[0]['Month'].drop_duplicates()
+    max_date = max_temp[0]['Date']
+    
+    min_t1 = min_t['Min TemperatureC'].drop_duplicates()
+    # min_month = min_temp[0]['Month'].drop_duplicates()
+    # min_date = min_temp[0]['Date'].drop_duplicates()
+    
+     
+    # print(min_hum[' Min Humidity'].drop_duplicates())
+    max_hum = max_hum['Max Humidity'].drop_duplicates()
+    # month_max_hum = max_hum[0]['Month'].drop_duplicates()
+    # month_max_hum = max_hum[0]['Date'].drop_duplicates()
         
-        # Required four columns
-        dataFrm['year'] = pd.DatetimeIndex(dataFrm['PKT']).year
-        dataFrm['month'] = pd.DatetimeIndex(dataFrm['PKT']).month
-        dataFrm['date'] = pd.DatetimeIndex(dataFrm['PKT']).day
-        dataFrm = dataFrm[['PKT','Max TemperatureC', 'Min TemperatureC', 'Max Humidity',
-                ' Min Humidity',]]
-       
-        min_temp = []
-        max_temp = []
-        min_Humidity = []
-        max_Humidity = []
-        min_temp.clear()
+    
+    print('\n--------------------------------------------\n')
+    print(f'Highest: {max_t1}C on {max_month} {max_date}')
+    # print(f"Lowest: {min_temp[0]['Min TemperatureC']}C on {min_temp[0]['Month']} {min_temp[0]['Date']}")
+    # print(f"Humidity: {max_Humidity[0]['Max Humidity']}% on {max_Humidity[0]['Month']} {max_Humidity[0]['Date']}")
+    print('\n--------------------------------------------\n')
+    ''' 
+if (option == '2'):
+    print("\n You have selected option 2.\n")
+   
+    month = int(input('Enter Month : '))
+    month = int(month)
+    mask = dataFrm['Month'] == month
+    
+    for year in range(2004,2016):
+        mask = dataFrm['Year'] == year
+        include = dataFrm[mask]
+        exclude = dataFrm[~mask]
         max_temp.clear()
         min_Humidity.clear()
         max_Humidity.clear()
-        
-        print( '---------------------------------------------------------------')
-        print('Year', year)
-        print("Min Temp", min_temp[0]['Min TemperatureC'])
-        print("Max Temp", max_temp[0]['Max TemperatureC'])
-        print("Min Humidity", min_temp[0]['Min Humidity'])
-        print("Max Humidity", max_temp[0]['Max Humidity'])
-        
-        print ("Please Enter Report Number:" \
-                      "\n 1: for Annual Max/Min Temperature" \
-                      "\n 2: for Hottest day of each year" \
-                      "\n 3: for coldest day of each year")
-        
-        option = input()
-        
-        if (option == '1'):
-            year = input('Enter year')
-            mask = dataFrm['year'] == int(year)
-            include = dataFrm[mask]
-            exclude = dataFrm[~mask]
-            min_temp.append(include[include['Min TemperatureC'] == include['Min TemperatureC'].min()])
-            max_temp.append(include[include['Max TemperatureC'] == include['Max TemperatureC'].max()])
-            min_Humidity.append(include[include[' Min Humidity'] == include[' Min Humidity'].min()])
-            max_Humidity.append(include[include['Max Humidity'] == include['Max Humidity'].max()])
+        max_temp.append(include[include['Max TemperatureC'] == include['Max TemperatureC'].max()])
+       # min_Humidity.append(include[include[' Min Humidity'] == include[' Min Humidity'].min()])
+        #max_Humidity.append(include[include['Max Humidity'] == include['Max Humidity'].max()])
+        print('Maximum Temp:',max_temp[0])
+        #print('Minimum Humidity:',min_Humidity[0])
+        #print('Max Humidity:',max_Humidity[0]) 
+        # time.sleep(5)
             
-
-        if (option == '2'):
-            for year in range(2004,2016,1):
-                
-                mask = dataFrm['year']==int(year)
-                include = dataFrm[mask]
-                exclude = dataFrm[~mask]
-                
-                print("max Temp",include[include['Max TemperatureC'] == include['Max TemperatureC'].max()])
-                print("min Humidity",include[include[' Min Humidity'] == include[' Min Humidity'].min()])
-                print("max humidity",include[include['Max Humidity'] == include['Max Humidity'].max()])
-                
-                
-        if ( option == '3' ) :
-            for year in range(2004,2016,1):    
+if (option == '3'):
+    # import time
+    print("\n You have selected option 3.\n")
+    
+    for year in range(2004,2016,1):
+        mask = dataFrm['Year']==year
+        include = dataFrm[mask]
+        exclude = dataFrm[~mask]
+        min_temp.clear()
+        min_Humidity.clear()
+        max_Humidity.clear()
         
-                mask = dataFrm['year']==int(year)
-                include = dataFrm[mask]
-                exclude = dataFrm[~mask]            
-            
-                print("min Temp",min_temp.append(include[include['Min TemperatureC'] == include['Min TemperatureC'].min()]))
-                print("min Humidity",include[include[' Min Humidity'] == include[' Min Humidity'].min()])
-                print("max humidity",include[include['Max Humidity'] == include['Max Humidity'].max()])
-'''        
-obj = weather();
-obj.main()
+        min_temp.append(include[include['Min TemperatureC'] == include['Min TemperatureC'].min()])
+       # min_Humidity.append(include[include[' Min Humidity'] == include[' Min Humidity'].min()])
+       # max_Humidity.append(include[include['Max Humidity'] == include['Max Humidity'].max()])
+        print('Maximum Temp:',min_temp[0])
+       # print('Minimum Humidity:',min_Humidity[0])
+       # print('Max Humidity:',max_Humidity[0]) 
+        # time.sleep(5)
+'''
 
 
 
 
-# DataFrame Attributes
-        # print( dataFrm.shape)
-        # print( dataFrm.columns )
-        # print( dataFrm.index )
-# DataFrame Methods
-        # print( dataFrm.info() )
-        # print( dataFrm.head() )
-        # print( dataFrm.tail() )
-        # print( dataFrm.count() )
-        # print( dataFrm.describe() )
-                
+
+# DataFrame Attributes and Methods to Analyze data
+# print(dataFrm)
+# print( dataFrm.dtypes)
+# print( dataFrm.shape)
+# print( dataFrm.index )
+# print ( dataFrm.columns )
+# print (dataFrm.head(2) )
+# print(dataFrm.tail())
+# print( dataFrm['PKT'].unique() )
+# print( dataFrm.nunique())
+# print( dataFrm.count())
+# print( dataFrm['PKT'].value_counts() )
+# print( dataFrm.info() )
+# print( dataFrm.isnull() )
+# print( dataFrm.isnull().sum())
+# print( len(dataFrm['Max TemperatureC'].unique()) )
+# print( dataFrm['Year'] == 2005)
+# print( dataFrm.groupby('Year').get_group(2008) )
+# print( dataFrm[' Mean Humidity'].mean() ) # calculate mean value
+# print( dataFrm[' Mean Humidity'].std() ) # calculate standard deviation
+# print( dataFrm[' Mean Humidity'].var() ) # calculate variance
+# print( dataFrm)
+# print( dataFrm.groupby('Year').min() )
+
+
+'''
+1. For a given year display the highest temperature and day, lowest temperature and day, most humid day and humidity.
+weatherman.py /path/to/files-dir -e 2002
+
+Highest: 45C on June 23
+Lowest: 01C on December 22
+Humidity: 95% on August 14
+
+
+2. For a given month display the average highest temperature, average lowest temperature, average mean humidity.
+weatherman.py /path/to/files-dir -a 2005/6
+
+Highest Average: 39C
+Lowest Average: 18C
+Average Mean Humidity: 71%
+
+3. For a given month draw two horizontal bar charts on the console for the highest and lowest temperature on each day. Highest in red and lowest in blue.
+weatherman.py /path/to/files-dir -c 2011/03
+March 2011
+01 +++++++++++++++++++++++++ 25C
+01 +++++++++++ 11C
+02 ++++++++++++++++++++++ 22C
+02 ++++++++ 08C
+
+
+
+'''
