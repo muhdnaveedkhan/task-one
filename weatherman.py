@@ -84,7 +84,7 @@ if (option == '1'):
     # print(f"Humidity: {max_Humidity[0]['Max Humidity']}% on {max_Humidity[0]['Month']} {max_Humidity[0]['Date']}")
     print('\n--------------------------------------------\n')
     
-if (option == '2'):
+elif (option == '2'):
     print("\n You have selected option 2.\n")
     year = int(input('Enter Year : '))
     year = int(year)
@@ -126,7 +126,7 @@ if (option == '2'):
     
         
 '''            
-if (option == '3'):
+elif (option == '3'):
     # import time
     print("\n You have selected option 3.\n")
     
@@ -179,19 +179,14 @@ if (option == '3'):
 '''
 1. For a given year display the highest temperature and day, lowest temperature and day, most humid day and humidity.
 weatherman.py /path/to/files-dir -e 2002
-
 Highest: 45C on June 23
 Lowest: 01C on December 22
 Humidity: 95% on August 14
-
-
 2. For a given month display the average highest temperature, average lowest temperature, average mean humidity.
 weatherman.py /path/to/files-dir -a 2005/6
-
 Highest Average: 39C
 Lowest Average: 18C
 Average Mean Humidity: 71%
-
 3. For a given month draw two horizontal bar charts on the console for the highest and lowest temperature on each day. Highest in red and lowest in blue.
 weatherman.py /path/to/files-dir -c 2011/03
 March 2011
@@ -199,7 +194,4 @@ March 2011
 01 +++++++++++ 11C
 02 ++++++++++++++++++++++ 22C
 02 ++++++++ 08C
-
-
-
 '''
